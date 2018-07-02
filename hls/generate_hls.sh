@@ -6,10 +6,13 @@ IP_CORES=(ip_handler mac_ip_encode arp_server_subnet icmp_server toe echo_server
 if [[ $# > 0 ]]; then
 	if [ "$1" = "vcu709" ]; then
 		PART="xc7vx690tffg1761-2"
-	fi
-	if [ "$1" = "vcu118" ]; then
+	elif [ "$1" = "vcu118" ]; then
 		PART="xcvu9p-flga2104-2L-e"
-	fi
+        elif [ "$1" = "xcku060" ]; then
+                PART="xcku060-ffva1156-2-i"
+        else
+                PART="$1"
+        fi
 fi
 
 HLS_DIR="$PWD"
