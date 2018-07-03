@@ -54,5 +54,7 @@ node {
             // cleanup
             sh "find -maxdepth 4 -name .autopilot -exec rm -r '{}' ';'"
         }
+        // copy zip files and reports
+        archiveArtifacts "iprepo/*/*.zip"
     }
 }
