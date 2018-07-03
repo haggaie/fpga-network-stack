@@ -39,8 +39,6 @@ def vivadoEnv() {
 }
 
 node {
-    def CMAKE=findCmake()
-
     stage('Preparation') {
         // Fetch our code
         checkout scm
