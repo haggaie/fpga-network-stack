@@ -26,13 +26,20 @@
  */
 
 properties ([parameters([
-    choice(name: 'VIVADO_VERSION',
+    choice(name: 'VIVADO_HLS_VERSION',
            description: 'The version of Vivado HLS to use for the build',
            choices: ['2018.2'].join('\n')),
+    choice(name: 'VIVADO_VERSION',
+           description: 'The version of Vivado to use for XCI generation',
+           choices: ['2016.2', '2018.2'].join('\n')),
     choice(name: 'PART',
            description: 'Device part number to build for',
-           choices: ['xcku060', 'vcu709', 'vcu118'].join('\n')),
+           choices: ['xcku060-ffva1156-2-i', 'vcu709', 'vcu118'].join('\n')),
 ])])
+
+def vivadoHlsEnv() {
+    return ". /opt/Xilinx/Vivado/${params.VIVADO_HLS_VERSION}/settings64.sh ;"
+}
 
 def vivadoEnv() {
     return ". /opt/Xilinx/Vivado/${params.VIVADO_VERSION}/settings64.sh ;"
@@ -46,13 +53,20 @@ node {
     stage('Build') {
         dir('hls') {
             // Run HLS unit tests (C simulation)
-            sh vivadoEnv() + "./generate_hls.sh ${params.PART}"
-            currentBuild.result = 'SUCCESS'
+            sh vivadoHlsEnv() + "./generate_hls.sh ${params.PART}"
 
             // cleanup
             sh "find -maxdepth 4 -name .autopilot -exec rm -r '{}' ';'"
         }
         // copy zip files and reports
         archiveArtifacts "iprepo/*/*.zip"
+    }
+    stage('XCI generation') {
+        dir('projects') {
+            sh vivadoEnv() + "vivado -mode batch -source create_xci.tcl -tclargs ${params.PART}"
+            currentBuild.result = 'SUCCESS'
+
+            archiveArtifacts "xci/*/*.xci"
+        }
     }
 }
