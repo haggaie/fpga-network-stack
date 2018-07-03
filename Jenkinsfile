@@ -46,7 +46,7 @@ node {
     stage('Build') {
         dir('hls') {
             // Run HLS unit tests (C simulation)
-            sh vivadoEnv() + "; ./generate_hls.sh ${params.PART}"
+            sh vivadoEnv() + "./generate_hls.sh ${params.PART}"
             currentBuild.result = 'SUCCESS'
 
             // cleanup
