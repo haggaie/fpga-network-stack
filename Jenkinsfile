@@ -37,7 +37,7 @@ properties ([parameters([
            choices: ['xcku060-ffva1156-2-i', 'vcu709', 'vcu118'].join('\n')),
     string(name: 'PERIOD',
            description: 'Clock period target for HLS.',
-           default: '216.25MHz'),
+           defaultValue: '216.25MHz'),
 ])])
 
 def vivadoHlsEnv() {
