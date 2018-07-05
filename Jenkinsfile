@@ -35,6 +35,9 @@ properties ([parameters([
     choice(name: 'PART',
            description: 'Device part number to build for',
            choices: ['xcku060-ffva1156-2-i', 'vcu709', 'vcu118'].join('\n')),
+    string(name: 'PERIOD',
+           description: 'Clock period target for HLS.',
+           default: '216.25MHz'),
 ])])
 
 def vivadoHlsEnv() {
@@ -53,7 +56,7 @@ node {
     stage('Build') {
         dir('hls') {
             // Run HLS unit tests (C simulation)
-            sh vivadoHlsEnv() + "./generate_hls.sh ${params.PART}"
+            sh vivadoHlsEnv() + "./generate_hls.sh ${params.PART} ${params.PERIOD}"
 
             // cleanup
             sh "find -maxdepth 4 -name .autopilot -exec rm -r '{}' ';'"
